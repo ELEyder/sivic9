@@ -38,7 +38,7 @@ Route::prefix('v1')->group(function () {
         Route::put('imagenes_web', [ImagenWebController::class, 'update']);
         Route::delete('imagenes_web/{id}', [ImagenWebController::class, 'destroy']);
 
-        Route::post('home-page', [StatisticsPageController::class, 'update']);
+        Route::post('home-page', [HomePageController::class, 'update']);
 
         Route::post('statistics-page', [StatisticsPageController::class, 'update']);
 

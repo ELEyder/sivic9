@@ -14,7 +14,7 @@ class HomePageController extends Controller
         return response()->json($home);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
 
         $home = HomePage::first();
