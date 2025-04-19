@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ImagenWeb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Facades\Image;
 
 class ImagenWebController extends Controller
 {
@@ -45,27 +44,26 @@ class ImagenWebController extends Controller
 
     public function update(Request $request)
     {
+        ini_set('memory_limit', '128M');
         $tipos = ['logo', 'carrusel1', 'carrusel2', 'carrusel3'];
         $response = [];
-        
-        $manager = new ImageManager(new Driver());
-
+    
         foreach ($tipos as $tipo) {
-            
             if ($request->hasFile($tipo)) {
                 $file = $request->file($tipo);
-
                 $filename = $tipo . '.png';
-
-                $image = $manager->read($file)->toPng();
-
-                Storage::disk('public')->put('imagenes_web/' . $filename, (string) $image);
-
+    
+                // Leer la imagen con Intervention y convertirla a PNG
+                $image = Image::make($file)->encode('png');
+    
+                // Guardar en el disco 'public' en la carpeta imagenes_web
+                Storage::disk('public')->put('imagenes_web/' . $filename, $image);
+    
             } else {
                 $response[] = $tipo . " no actualizado";
             }
         }
-
+    
         return response()->json([
             'message' => 'Imágenes actualizadas correctamente.',
             "response" => $response
